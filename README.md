@@ -20,7 +20,13 @@ $ rpmbuild --define "_version 0.8.10"
 
 * Build the Docker image. Note that you must amend the `Dockerfile` header if you want a specific OS build (default is `centos7`).
     ```
-    docker build --rm -t consul:build .
+    docker build --rm -t consul:build -f Dockerfile.centos7
+    ```
+
+    or
+
+    ```
+    docker build --rm -t consul:build -f Dockerfile.centos6
     ```
 
 * Run the build.
