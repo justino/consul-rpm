@@ -1,1 +1,0 @@
-CMD_OPTS="-config=/etc/consul-template.d/consul-template.config"
