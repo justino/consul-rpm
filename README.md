@@ -1,4 +1,4 @@
-# RPM Spec for Consul
+# RPM Spec for Consul and Consul-Template
 
 Tries to follow the [packaging guidelines](https://fedoraproject.org/wiki/Packaging:Guidelines) from Fedora.
 
@@ -59,7 +59,7 @@ Three RPMs:
 
 ## Config
 
-Config files are loaded in lexical order from the `config-dir`. Some
+Config files are loaded in lexical order from the `/etc/consul.d/`. Some
 sample configs are provided.
 
 # More info
