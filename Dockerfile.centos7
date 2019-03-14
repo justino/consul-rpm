@@ -9,6 +9,7 @@ USER build
 
 WORKDIR /build
 
-CMD set -x && \
-    spectool -g -R rpmbuild/SPECS/consul.spec \
-    && rpmbuild -ba rpmbuild/SPECS/consul.spec
+CMD set -x \
+    && spectool -g -R rpmbuild/SPECS/consul.spec \
+    && rpmbuild -ba rpmbuild/SPECS/consul.spec \
+    && rm rpmbuild/SOURCES/*.zip

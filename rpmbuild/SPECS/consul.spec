@@ -11,7 +11,7 @@ Summary:        Consul is a tool for service discovery and configuration. Consul
 
 Group:          System Environment/Daemons
 License:        MPLv2.0
-URL:            http://www.consul.io
+URL:            https://www.consul.io
 Source0:        https://releases.hashicorp.com/%{name}/%{version}/%{name}_%{version}_linux_amd64.zip
 Source1:        %{name}.sysconfig
 Source2:        %{name}.service
@@ -22,18 +22,13 @@ Source6:        %{name}-ui.json
 Source7:        %{name}.logrotate
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
+Requires(pre): shadow-utils
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
 BuildRequires:  systemd-units
 Requires:       systemd
 %else
 Requires:       logrotate
 %endif
-Requires(pre): shadow-utils
-
-%package ui
-Summary: Consul Web UI
-Requires: consul = %{version}
-BuildArch: noarch
 
 %description
 Consul is a tool for service discovery and configuration. Consul is distributed, highly available, and extremely scalable.
@@ -44,11 +39,15 @@ Consul provides several key features:
  - Key/Value Storage - A flexible key/value store enables storing dynamic configuration, feature flagging, coordination, leader election and more. The simple HTTP API makes it easy to use anywhere.
  - Multi-Datacenter - Consul is built to be datacenter aware, and can support any number of regions without complex configuration.
 
+%package ui
+Summary: Consul Web UI
+Requires: consul = %{version}
+BuildArch: noarch
 %description ui
 Consul comes with support for a beautiful, functional web UI. The UI can be used for viewing all services and nodes, viewing all health checks and their current status, and for reading and setting key/value data. The UI automatically supports multi-datacenter.
 
 %prep
-%setup -q -c -b 4
+%setup -c -b 4
 
 %install
 mkdir -p %{buildroot}/%{_bindir}
@@ -59,8 +58,6 @@ cp %{SOURCE6} %{buildroot}/%{_sysconfdir}/%{name}.d/
 mkdir -p %{buildroot}/%{_sysconfdir}/sysconfig
 cp %{SOURCE1} %{buildroot}/%{_sysconfdir}/sysconfig/%{name}
 mkdir -p %{buildroot}/%{_sharedstatedir}/%{name}
-mkdir -p %{buildroot}/%{_datadir}/%{name}-ui
-cp -r index.html static %{buildroot}/%{_prefix}/share/%{name}-ui
 
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
 mkdir -p %{buildroot}/%{_unitdir}
@@ -72,6 +69,9 @@ cp %{SOURCE3} %{buildroot}/%{_initrddir}/consul
 cp %{SOURCE7} %{buildroot}/%{_sysconfdir}/logrotate.d/%{name}
 %endif
 
+mkdir -p %{buildroot}/%{_datadir}/%{name}-ui
+cp -r index.html static %{buildroot}/%{_prefix}/share/%{name}-ui
+
 %pre
 getent group consul >/dev/null || groupadd -r consul
 getent passwd consul >/dev/null || \
@@ -80,6 +80,7 @@ getent passwd consul >/dev/null || \
 exit 0
 
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
+
 %post
 %systemd_post %{name}.service
 
@@ -88,7 +89,9 @@ exit 0
 
 %postun
 %systemd_postun_with_restart %{name}.service
+
 %else
+
 %post
 /sbin/chkconfig --add %{name}
 
@@ -97,11 +100,11 @@ if [ "$1" = 0 ] ; then
     /sbin/service %{name} stop >/dev/null 2>&1
     /sbin/chkconfig --del %{name}
 fi
+
 %endif
 
 %clean
 rm -rf %{buildroot}
-
 
 %files
 %defattr(-,root,root,-)

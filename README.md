@@ -18,23 +18,25 @@ $ rpmbuild --define "_version 0.8.10"
 
 # Build
 
-* Build the Docker image. Note that you must amend the `Dockerfile` header if you want a specific OS build (default is `centos7`).
+* Build the Docker image. You can pick and choose the RHEL version.
     ```
-    docker build --rm -t consul:build -f Dockerfile.centos7
+    docker build --rm -t consul:build7 -f Dockerfile.centos7 .
     ```
 
     or
 
     ```
-    docker build --rm -t consul:build -f Dockerfile.centos6
+    docker build --rm -t consul:build6 -f Dockerfile.centos6 .
     ```
 
-* Run the build.
+* Run the build. Replace `#` with the RHEL version you want.
     ```
-    docker run --rm -v $PWD:/build consul:build
+    docker run --rm -v $PWD:/build consul:build#
     ```
 
-* Retrieve the built RPMs from `$PWD/rpmbuild/RPMS`.
+* Retrieve the built S/RPMs from:
+  * `$PWD/rpmbuild/RPMS`
+  * `$PWD/rpmbuild/SRPMS`
 
 # Result
 
