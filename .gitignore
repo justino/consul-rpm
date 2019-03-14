@@ -2,3 +2,4 @@ rpmbuild/BUILD
 rpmbuild/RPMS
 rpmbuild/SRPMS
 rpmbuild/SOURCES/*.zip
+.pki
